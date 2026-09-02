@@ -137,7 +137,7 @@ proxy-groups:
     filter: "^((?!(直连|拒绝)).)*$"
 
   # 业务分流组
-  - {name: ChatGPT, <<: *default, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png"}
+  - {name: AI服务, <<: *default, icon: "https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png"}
   - {name: GitHub, <<: *default, icon: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/github.png"}
   - {name: Telegram, <<: *default, icon: "https://raw.githubusercontent.com/ifanrBook/ClashConfig/refs/heads/main/icon/telegram.png"}
   - {name: Twitter(X), <<: *default, icon: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/twitter.png"}
@@ -403,13 +403,13 @@ rules:
   - RULE-SET,Private / Domain,直连
   
   - RULE-SET,Check / Domain,Check  
-  - RULE-SET,ChatGPT / Domain,ChatGPT
-  - RULE-SET,Claude / Domain,ChatGPT
-  - RULE-SET,Meta AI / Domain,ChatGPT
-  - RULE-SET,Perplexity / Domain,ChatGPT
-  - RULE-SET,Gemini / Domain,ChatGPT
-  - RULE-SET,Copilot / Domain,ChatGPT
-  - RULE-SET,AI / Domain,ChatGPT
+  - RULE-SET,ChatGPT / Domain,AI服务
+  - RULE-SET,Claude / Domain,AI服务
+  - RULE-SET,Meta AI / Domain,AI服务
+  - RULE-SET,Perplexity / Domain,AI服务
+  - RULE-SET,Gemini / Domain,AI服务
+  - RULE-SET,Copilot / Domain,AI服务
+  - RULE-SET,AI / Domain,AI服务
   - RULE-SET,GitHub / Domain,GitHub
   - RULE-SET,Telegram / Domain,Telegram
 
