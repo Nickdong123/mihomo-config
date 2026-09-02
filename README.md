@@ -12,8 +12,151 @@
 - 不希望把机场订阅、节点地址、UUID、密码等敏感信息提交到 GitHub
 
 本仓库只保存公共配置和处理逻辑，不包含任何私人节点信息。
+---
+## 配置解耦与独立演进
+
+这套方案的核心目标之一，就是把“公共配置”和“私人节点”彻底分离。
+
+这样规则、DNS、TUN、策略组和节点订阅可以分别维护、分别更新，互不覆盖。
+
+### 公共配置独立演进
+
+公共配置主要由以下文件维护：
+
+```text
+mihomo.yaml
+mihomo-substore.yaml
+populate-groups.js
+```
+
+其中可以独立调整：
+
+- DNS
+- TUN
+- 规则
+- Rule Providers
+- 策略组
+- 地区分组
+- 节点分类逻辑
+- 重名节点处理逻辑
+
+这些配置发生变化时，不需要修改私人订阅或节点信息。
+
+客户端重新更新配置后，就可以获取新的公共规则。
 
 ---
+
+### 私人节点独立更新
+
+私人节点来自：
+
+```text
+机场订阅
+自建节点
+Sub-Store 组合订阅
+```
+
+节点侧可以独立发生：
+
+- 新增节点
+- 删除节点
+- IP 变化
+- 域名变化
+- 端口变化
+- UUID 变化
+- 协议参数变化
+- Reality / TLS / WS 等参数变化
+
+这些变化不会影响公共规则模板。
+
+Sub-Store 每次重新生成配置时，会重新读取当前最新节点，并与公共模板重新合成。
+
+---
+
+### 最终关系
+
+整体关系可以理解为：
+
+```text
+公共规则 / DNS / TUN / 策略组
+                ↓
+mihomo-substore.yaml
+                ↓
+                +
+                ↓
+机场订阅 / 自建节点
+                ↓
+Sub-Store 组合订阅
+                ↓
+populate-groups.js
+                ↓
+完整 Mihomo 配置
+                ↓
+Clash Meta for Android
+```
+
+因此可以做到：
+
+```text
+规则独立演进
++
+节点独立更新
++
+最终自动合成
+```
+
+两边互不保存对方的私人数据，也不需要因为一边变化而手工重做另一边配置。
+
+---
+
+### Windows 与 Android 分别使用
+
+Windows：
+
+```text
+mihomo.yaml
++
+本地 Merge / Override
++
+私人节点
+↓
+Clash Verge Rev
+```
+
+Android：
+
+```text
+私人订阅
+↓
+Sub-Store
+↓
+mihomo-substore.yaml
+↓
+populate-groups.js
+↓
+完整配置
+↓
+Clash Meta for Android
+```
+
+---
+
+### 注意
+
+当前仓库同时维护：
+
+```text
+mihomo.yaml
+mihomo-substore.yaml
+```
+
+两份公共模板。
+
+如果以后修改公共规则、DNS、TUN、策略组等公共内容，建议同步修改这两个文件。
+
+节点订阅本身则不需要同步修改。
+---
+
 
 ## 文件说明
 
