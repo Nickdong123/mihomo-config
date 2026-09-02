@@ -43,7 +43,7 @@ tcp-concurrent: true
 # 公共模板默认只允许本机访问控制 API，避免未注入 secret 时暴露到局域网。
 # 如需局域网访问面板，请在本地 Override 中改为 0.0.0.0:9090，
 # 并同时注入高强度 secret。
-external-controller: 127.0.0.1:9090
+external-controller: 0.0.0.0:9090
 external-ui: ui
 external-ui-name: zashboard
 external-ui-url: https://gh-proxy.com/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
