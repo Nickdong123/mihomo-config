@@ -13,7 +13,7 @@
 # 下方策略组使用 include-all，可自动纳入合并后的节点。
 
 # 模板只保留基础内建节点；实际代理节点由本地 Merge / Override 注入
-proxies:
+proxies+:
   - {name: 直连, type: direct}
   - {name: 拒绝, type: reject}
 
