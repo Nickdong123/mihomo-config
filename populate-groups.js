@@ -1,8 +1,27 @@
 function main(config) {
   var proxies = Array.isArray(config.proxies) ? config.proxies : [];
-  var groups = Array.isArray(config["proxy-groups"]) ? config["proxy-groups"] : [];
 
-  // 所有真实节点
+  // 先处理重复节点名：同名节点自动变成 名称、名称 #2、名称 #3...
+  var nameCount = {};
+
+  proxies.forEach(function (proxy) {
+    if (!proxy || !proxy.name) return;
+
+    var original = proxy.name;
+
+    if (!nameCount[original]) {
+      nameCount[original] = 1;
+      return;
+    }
+
+    nameCount[original] += 1;
+    proxy.name = original + " #" + nameCount[original];
+  });
+
+  var groups = Array.isArray(config["proxy-groups"])
+    ? config["proxy-groups"]
+    : [];
+
   var nodes = proxies
     .map(function (p) { return p && p.name; })
     .filter(function (name) {
@@ -41,7 +60,10 @@ function main(config) {
 
     if (group.name === "所有-手动" || group.name === "所有-自动") {
       list = nodes;
-    } else if (group.name === "其他地区-手动" || group.name === "其他地区-自动") {
+    } else if (
+      group.name === "其他地区-手动" ||
+      group.name === "其他地区-自动"
+    ) {
       list = otherNodes();
     } else {
       for (var region in rules) {
@@ -57,13 +79,13 @@ function main(config) {
 
     if (list !== null) {
       group.proxies = list.length ? list : ["直连"];
-
-      // 不再依赖 CMFA 的 include-all/filter
       delete group["include-all"];
       delete group.filter;
     }
   });
 
+  config.proxies = proxies;
   config["proxy-groups"] = groups;
+
   return config;
 }
