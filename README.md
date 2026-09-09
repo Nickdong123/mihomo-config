@@ -157,6 +157,30 @@ mihomo-substore.yaml
 节点订阅本身则不需要同步修改。
 ---
 
+## 当前分流与 DNS 约定
+
+当前第一阶段优化保持原有“地区手动 + 自动测速 + 故障转移”结构，只调整分流优先级和解析职责：
+
+- OpenAI、Claude、Gemini、Copilot、Perplexity、Meta AI 以及海外 AI 兜底规则统一进入 `AI服务`。
+- `category-ai-!cn` 仅作为 `AI海外兜底`，不建立国内 AI 策略组。
+- DeepSeek、智谱、通义、豆包等国内服务继续通过 `China / Domain` 或 `China / IP` 进入 `国内网站`，默认直连。
+- `Apple-CN / Domain` 和 `Microsoft-CN / Domain` 在普通 Apple/Microsoft 规则之前匹配并直连。
+- DNS 使用 ARC 缓存、IPv4-only、fake-ip；国内域名使用国内 DoH，海外域名使用遵守路由规则的海外 DoH，代理节点使用独立的国内 DNS，私有域名和 Tailscale 使用系统解析。
+- `.lan`、`.local`、`.ts.net` 和 `geosite:private` 保留真实解析，避免局域网设备、NAS 和 Tailscale MagicDNS 被错误分配 fake-ip。
+
+规则集中的 MetaCubeX MRS 文件优先通过 jsDelivr 加载；文字规则仍按其实际格式保持 `classical/text`，不能把 text 规则误标为 MRS。
+
+## Zashboard 访问安全
+
+公共模板保留 `external-controller: 0.0.0.0:9090`，以支持本机、家庭局域网和 Tailscale 访问，但模板不包含真实 secret。实际部署时必须：
+
+1. 通过本地 Override 注入高强度 `secret`。
+2. 不将 9090 做公网端口转发。
+3. 在主机或路由器防火墙中只允许本机、局域网和 Tailscale 网段访问。
+
+不要把包含真实 secret、节点地址或订阅凭证的最终配置提交到本仓库。
+---
+
 
 ## 文件说明
 
