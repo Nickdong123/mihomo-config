@@ -438,9 +438,8 @@ rules:
   - RULE-SET,WhatsApp / Domain,WhatsApp
   - RULE-SET,Facebook / Domain,Facebook
   - RULE-SET,Amazon / Domain,Amazon
-  - RULE-SET,Apple-CN / Domain,直连
+  - RULE-SET,Apple-CN / Domain,Apple
   - RULE-SET,Apple / Domain,Apple
-  - RULE-SET,Microsoft-CN / Domain,直连
   - RULE-SET,Microsoft / Domain,Microsoft
   - RULE-SET,OKX / Domain,Crypto
   - RULE-SET,Bybit / Domain,Crypto
@@ -498,7 +497,6 @@ rule-providers:
   Amazon / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/amazon.mrs"}
   Apple-CN / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple-cn.mrs"}
   Apple / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/apple.mrs"}
-  Microsoft-CN / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft@cn.mrs"}
   Microsoft / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/microsoft.mrs"}
   OKX / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/okx.mrs"}
   Bybit / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/bybit.mrs"}

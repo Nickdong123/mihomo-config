@@ -164,7 +164,7 @@ mihomo-substore.yaml
 - OpenAI、Claude、Gemini、Copilot、Perplexity、Meta AI 以及海外 AI 兜底规则统一进入 `AI服务`。
 - `category-ai-!cn` 仅作为 `AI海外兜底`，不建立国内 AI 策略组。
 - DeepSeek、智谱、通义、豆包等国内服务继续通过 `China / Domain` 或 `China / IP` 进入 `国内网站`，默认直连。
-- `Apple-CN / Domain` 和 `Microsoft-CN / Domain` 在普通 Apple/Microsoft 规则之前匹配并直连。
+- Apple 和 Microsoft 的中国区域域名仍由各自的 `Apple`、`Microsoft` 策略组控制，不设置用户看不见的强制直连例外。
 - DNS 使用 ARC 缓存、IPv4-only、fake-ip；国内域名使用国内 DoH，海外域名使用遵守路由规则的海外 DoH，代理节点使用独立的国内 DNS，私有域名和 Tailscale 使用系统解析。
 - `.lan`、`.local`、`.ts.net` 和 `geosite:private` 保留真实解析，避免局域网设备、NAS 和 Tailscale MagicDNS 被错误分配 fake-ip。
 
