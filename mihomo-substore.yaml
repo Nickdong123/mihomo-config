@@ -159,6 +159,7 @@ proxy-groups:
 
   # 业务分流组
   - {name: AI服务, <<: *default, icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AI.png"}
+  - {name: 开发服务, <<: *default, icon: "https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Server.png"}
   - {name: GitHub, <<: *default, icon: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/github.png"}
   - {name: Telegram, <<: *default, icon: "https://raw.githubusercontent.com/ifanrBook/ClashConfig/refs/heads/main/icon/telegram.png"}
   - {name: Twitter(X), <<: *default, icon: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/icon/twitter.png"}
@@ -463,6 +464,12 @@ rules:
   - RULE-SET,Google / IP,Google,no-resolve
   - RULE-SET,Telegram / IP,Telegram,no-resolve
   - RULE-SET,Netflix / IP,Netflix,no-resolve
+  # 开发服务作为可选的统一控制入口；上面的业务规则优先于本组，避免覆盖 AI、GitHub 等既有分流。
+  - RULE-SET,Python / Domain,开发服务
+  - RULE-SET,Docker / Domain,开发服务
+  - RULE-SET,JetBrains / Domain,开发服务
+  - RULE-SET,Npmjs / Domain,开发服务
+  - RULE-SET,Developer / Domain,开发服务
   - RULE-SET,Proxy / Domain,国外网站
   - RULE-SET,Globe / Domain,国外网站
   - RULE-SET,GateFireWall / Domain,国外网站
@@ -488,6 +495,11 @@ rule-providers:
   Copilot / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Copilot.list"}
   Gemini / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Gemini.list"}
   AI海外兜底 / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.mrs"}
+  Python / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Python/Python.list"}
+  Docker / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Docker/Docker.list"}
+  JetBrains / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Jetbrains/Jetbrains.list"}
+  Npmjs / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Npmjs/Npmjs.list"}
+  Developer / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Developer/Developer.list"}
   GitHub / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/github.mrs"}
   Telegram / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.mrs"}
   Telegram / IP: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/telegram.mrs"}
