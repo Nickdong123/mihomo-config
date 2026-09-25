@@ -175,6 +175,70 @@ mihomo-substore.yaml
 
 规则集中的 MetaCubeX MRS 文件优先通过 jsDelivr 加载；文字规则仍按其实际格式保持 `classical/text`，不能把 text 规则误标为 MRS。
 
+## 域名嗅探与客户端覆盖关系
+
+两个公共模板都包含一组保守的 Mihomo 域名嗅探设置：
+
+```yaml
+sniffer:
+  enable: true
+  override-destination: false
+  force-dns-mapping: false
+  parse-pure-ip: true
+```
+
+这组设置主要用于从纯 IP 连接中补出域名，让已有的域名规则能够正常参与分流。`override-destination: false` 表示只补充分流信息，不把连接实际访问的目标地址改写成嗅探出来的域名，因此适合做公共默认配置。
+
+模板还跳过了米家云和 Apple Push 等容易受嗅探影响的连接。
+
+### OpenClash 的图形设置优先
+
+OpenClash 会根据图形界面重新生成最终配置。对于它负责管理的字段，界面设置通常优先于订阅 YAML：
+
+| 使用方式 | 最终嗅探状态 |
+| --- | --- |
+| Mihomo / Clash Meta 直接读取模板 | 使用模板中的 `sniffer` 设置 |
+| OpenClash 界面开启域名嗅探 | 通常生成 `sniffer.enable: true`，详细参数由 OpenClash 模板和配置共同决定 |
+| OpenClash 界面关闭域名嗅探 | 通常生成 `sniffer.enable: false`，不会被模板中的 `true` 强行打开 |
+
+因此，模板中的 `sniffer` 是没有额外图形覆盖时的合理默认值。在 OpenClash 上，修改界面设置后需要重新生成或重载配置；如果想完全按模板控制，就需要关闭相应的配置覆盖，或使用自己的 OpenClash 自定义模板。
+
+域名嗅探不会替换整份规则列表。它只是在连接没有域名、但协议中包含域名信息时补充分流线索，最终仍由现有 `rules` 和策略组决定出口。
+
+## Fake-IP 例外域名
+
+当前 DNS 使用：
+
+```yaml
+enhanced-mode: fake-ip
+fake-ip-filter-mode: blacklist
+```
+
+`fake-ip-filter` 中除了局域网、Tailscale、私有域名和中国域名外，还引用了两个远程文字规则集：
+
+```text
+fakeipfilter-cn
+fakeipfilter-!cn
+```
+
+它们来自 [qichiyuhub/rule](https://github.com/qichiyuhub/rule)，通过 jsDelivr 加载，模板设置为每 24 小时检查一次更新。规则内容由上游维护，通常覆盖 NTP、STUN、系统连通性检测、游戏、推送和部分设备服务等不适合拿到 Fake-IP 的域名。
+
+命中例外列表的域名会保留真实 DNS 解析，不分配 `198.18.0.0/16` 中的 Fake-IP。这样可以减少设备服务、网络检测和部分游戏连接对 Fake-IP 的兼容性问题。
+
+Fake-IP 例外只改变 DNS 解析方式，不会自动把域名改成直连，也不会绕过现有策略组。域名最终走直连还是代理，仍由 `rules` 和策略组决定。
+
+OpenClash 可能还有自己的内置或自定义 Fake-IP 过滤列表。如果 OpenClash 的 DNS/Fake-IP 设置覆盖了订阅中的同名字段，最终以 OpenClash 生成的配置为准；关闭 Fake-IP 模式时，这些 Fake-IP 例外自然不会生效。
+
+## 客户端使用建议
+
+| 客户端 | 建议使用 | 需要注意 |
+| --- | --- | --- |
+| Clash Meta for Android | `mihomo-substore.yaml` + `populate-groups.js` | Sub-Store 负责把私人节点合入公共模板 |
+| Clash Verge Rev | `mihomo.yaml` | 通过本地 Merge / Override 注入私人节点 |
+| OpenClash | `mihomo.yaml` 或合成后的完整配置 | 图形界面的 DNS、Fake-IP、嗅探选项可能覆盖 YAML 对应字段 |
+
+遇到分流结果与预期不一致时，先检查客户端生成的最终配置，而不要只看 GitHub 上的公共模板。重点查看 `dns.enhanced-mode`、`dns.fake-ip-filter`、`sniffer.enable` 和相关 OpenClash 覆盖设置。
+
 ## Zashboard 访问安全
 
 公共模板保留 `external-controller: 0.0.0.0:9090`，以支持本机、家庭局域网和 Tailscale 访问，但模板不包含真实 secret。实际部署时必须：
@@ -440,6 +504,7 @@ HK
 ```text
 mihomo-config/
 ├── README.md
+├── VERSION
 ├── mihomo.yaml
 ├── mihomo-substore.yaml
 └── populate-groups.js
@@ -582,6 +647,27 @@ populate-groups.js
 ---
 
 ## 更新方式
+
+当前版本记录在：
+
+```text
+VERSION
+```
+
+正式版本使用 Git tag，例如：
+
+```text
+v1.0.0
+```
+
+公共模板可以直接使用以下地址：
+
+```text
+https://raw.githubusercontent.com/Nickdong123/mihomo-config/main/mihomo.yaml
+https://raw.githubusercontent.com/Nickdong123/mihomo-config/main/mihomo-substore.yaml
+```
+
+如果需要固定某个经过验证的版本，可以把 `main` 换成对应的版本 tag，例如 `v1.0.0`。使用 tag 可以避免后续规则或配置变化立即影响正在运行的客户端。
 
 公共规则或策略组需要调整时：
 
