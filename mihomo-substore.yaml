@@ -40,7 +40,7 @@ ipv6: false
 unified-delay: true
 tcp-concurrent: true
 
-# 为 category-dev 使用的 GeoSite 数据启用自动更新。
+# 使用上游发布的完整 GeoSite 数据，开发分类随数据每 24 小时自动更新。
 geo-auto-update: true
 geo-update-interval: 24
 geox-url:
@@ -451,19 +451,12 @@ rules:
 
   - RULE-SET,Check / Domain,Check
   - RULE-SET,OpenAI / Domain,AI服务
+  - RULE-SET,Claude / Domain,AI服务
+  - RULE-SET,Meta AI / Domain,AI服务
   - RULE-SET,Perplexity / Domain,AI服务
+  - RULE-SET,Gemini / Domain,AI服务
+  - RULE-SET,Copilot / Domain,AI服务
   - RULE-SET,AI海外兜底 / Domain,AI服务
-  # 从原 AI 小列表保留分类集未覆盖的匹配，减少外部规则来源。
-  - DOMAIN-SUFFIX,gemini-pa.googleapis.com,AI服务
-  - DOMAIN-SUFFIX,aistudio-pa.clients6.google.com,AI服务
-  - DOMAIN-SUFFIX,metademolab.com,AI服务
-  - DOMAIN-SUFFIX,genspark.ai,AI服务
-  - DOMAIN-SUFFIX,skywork.ai,AI服务
-  # 共享服务兼容规则：也会匹配非 AI 流量，确认实际依赖后再收窄。
-  - DOMAIN-SUFFIX,googleusercontent.com,AI服务
-  - DOMAIN-SUFFIX,android.googleapis.com,AI服务
-  - DOMAIN-SUFFIX,bing.com,AI服务
-  - DOMAIN,cdn.usefathom.com,AI服务
   - RULE-SET,GitHub / Domain,GitHub
   - RULE-SET,Telegram / Domain,Telegram
 
@@ -496,22 +489,8 @@ rules:
   - RULE-SET,Google / IP,Google,no-resolve
   - RULE-SET,Telegram / IP,Telegram,no-resolve
   - RULE-SET,Netflix / IP,Netflix,no-resolve
-  # MetaCubeX GeoSite 的 category-dev 覆盖开发生态；前面的专用策略组优先。
+  # category-dev 由上游维护；前面的 AI、GitHub、Apple 等专用规则优先。
   - GEOSITE,category-dev,开发服务
-  # npm 已包含在分类中；以下补充旧列表中的开发域名及 Maven Central。
-  - DOMAIN-SUFFIX,dockerhub.com,开发服务
-  - DOMAIN-SUFFIX,jetbrains.io,开发服务
-  - DOMAIN-SUFFIX,jetbra.in,开发服务
-  - DOMAIN-SUFFIX,atlassian.com,开发服务
-  - DOMAIN-SUFFIX,elastic.co,开发服务
-  - DOMAIN-SUFFIX,elastic.com,开发服务
-  - DOMAIN-SUFFIX,jitpack.io,开发服务
-  - DOMAIN-SUFFIX,maven.org,开发服务
-  - DOMAIN-SUFFIX,mvnrepository.com,开发服务
-  - DOMAIN-SUFFIX,postman-echo.com,开发服务
-  - DOMAIN-SUFFIX,sonatype.org,开发服务
-  - DOMAIN-SUFFIX,spring.io,开发服务
-  - DOMAIN-SUFFIX,spring.net,开发服务
   - RULE-SET,Proxy / Domain,国外网站
   - RULE-SET,Globe / Domain,国外网站
   - RULE-SET,GateFireWall / Domain,国外网站
@@ -534,9 +513,12 @@ rule-providers:
   fakeipfilter_!cn: {<<: *domain_text, url: "https://cdn.jsdelivr.net/gh/qichiyuhub/rule@main/rules/fakeipfilter-!cn.list"}
   Check / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/sev7enshare/Clash-Config@main/list/check.list"}
   OpenAI / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/openai.mrs"}
+  Claude / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Claude/Claude.list"}
+  Meta AI / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/MetaAi.list"}
   Perplexity / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/perplexity.mrs"}
-  # 审核时 CDN 与当前发布文件不一致，AI 分类直接读取 GitHub 分支。
-  AI海外兜底 / Domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"}
+  Copilot / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Copilot.list"}
+  Gemini / Domain: {<<: *class, url: "https://cdn.jsdelivr.net/gh/liandu2024/clash@main/list/Gemini.list"}
+  AI海外兜底 / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/category-ai-!cn.mrs"}
   GitHub / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/github.mrs"}
   Telegram / Domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geosite/telegram.mrs"}
   Telegram / IP: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@meta/geo/geoip/telegram.mrs"}
