@@ -165,15 +165,19 @@ mihomo-substore.yaml
 
 当前第一阶段优化保持原有“地区手动 + 自动测速 + 故障转移”结构，只调整分流优先级和解析职责：
 
-- OpenAI、Claude、Gemini、Copilot、Perplexity、Meta AI 以及海外 AI 兜底规则统一进入 `AI服务`。
-- V2Fly `category-dev` 分类将 Go、Rust、Python、Docker、JetBrains、GitLab 等开发生态汇入可选的 `开发服务` 策略组；npm registry 和 Maven Central 的 `maven.org` 域名另有补充规则。GeoSite 数据由 Mihomo 每 24 小时自动更新，GitHub 仍优先进入独立的 `GitHub` 组。
+- OpenAI、Perplexity 和 `category-ai-!cn` 分类统一进入 `AI服务`；原 Claude、Gemini、Copilot、Meta AI 小列表未被分类覆盖的匹配收拢为模板内的补充规则。
+- MetaCubeX GeoSite 的 `category-dev` 分类将 Go、Rust、Python、Docker、JetBrains、GitLab 等开发生态汇入可选的 `开发服务` 策略组；模板补充 JetBrains、Atlassian、Elastic、JitPack、Maven、Spring 等旧列表中的开发域名。npm 已包含在分类中。GeoSite 数据由 Mihomo 每 24 小时自动更新，GitHub 仍优先进入独立的 `GitHub` 组。
 - `category-ai-!cn` 仅作为 `AI海外兜底`，不建立国内 AI 策略组。
 - DeepSeek、智谱、通义、豆包等国内服务继续通过 `China / Domain` 或 `China / IP` 进入 `国内网站`，默认直连。
 - Apple 和 Microsoft 的中国区域域名仍由各自的 `Apple`、`Microsoft` 策略组控制，不设置用户看不见的强制直连例外。
 - DNS 使用 ARC 缓存、IPv4-only、fake-ip；国内域名使用国内 DoH，海外域名使用遵守路由规则的海外 DoH，代理节点使用独立的国内 DNS，私有域名和 Tailscale 使用系统解析。
 - `.lan`、`.local`、`.ts.net` 和 `geosite:private` 保留真实解析，避免局域网设备、NAS 和 Tailscale MagicDNS 被错误分配 fake-ip。
 
-规则集中的 MetaCubeX MRS 文件优先通过 jsDelivr 加载；文字规则仍按其实际格式保持 `classical/text`，不能把 text 规则误标为 MRS。
+规则集中的 MetaCubeX MRS 文件通常通过 jsDelivr 加载；AI 分类因审核时出现 CDN 与 GitHub 当前文件不一致，改为直接读取 GitHub 分支。文字规则仍按其实际格式保持 `classical/text`，不能把 text 规则误标为 MRS。
+
+`googleusercontent.com`、`android.googleapis.com`、`bing.com` 和 `cdn.usefathom.com` 属于保留的共享服务兼容规则，也可能把非 AI 流量送入 `AI服务`。Google 官方文档确认 `googleusercontent.com` 还用于 Drive 等服务；这能证明整域匹配范围偏宽，但不能证明移除规则不会影响 Gemini。收窄这些匹配前需要实际连接记录；本轮保留原有匹配范围。
+
+补充规则由本仓库维护，不再随原 AI 小列表自动更新。规则来源、覆盖差异及后续整理事项见 [规则来源审核](RULESET-AUDIT.md)。
 
 ## 域名嗅探与客户端覆盖关系
 
