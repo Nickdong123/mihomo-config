@@ -166,7 +166,7 @@ mihomo-substore.yaml
 当前第一阶段优化保持原有“地区手动 + 自动测速 + 故障转移”结构，只调整分流优先级和解析职责：
 
 - OpenAI、Claude、Gemini、Copilot、Perplexity、Meta AI 以及海外 AI 兜底规则统一进入 `AI服务`。
-- Docker、npm、PyPI/Python、Maven 和 JetBrains 等开发服务进入可选的 `开发服务` 策略组，仍可手动选择直连、代理、自动或故障转移。
+- 开发服务使用上游维护的 `category-dev` 分类，覆盖 Go、Rust、Python、Docker、JetBrains、GitLab、npm 等开发生态，仍可手动选择直连、代理、自动或故障转移。分类来自 V2Fly 社区及 MetaCubeX 的构建发布，使用完整 `geosite.dat` 并由 Mihomo 每 24 小时自动更新；本仓库不额外维护开发域名补充。前面的 AI、GitHub、Apple、Microsoft 等专用规则优先，分类未收录的域名按后续通用规则分流。此分类覆盖面更广，但不是原五个开发列表的完整超集。
 - `category-ai-!cn` 仅作为 `AI海外兜底`，不建立国内 AI 策略组。
 - DeepSeek、智谱、通义、豆包等国内服务继续通过 `China / Domain` 或 `China / IP` 进入 `国内网站`，默认直连。
 - Apple 和 Microsoft 的中国区域域名仍由各自的 `Apple`、`Microsoft` 策略组控制，不设置用户看不见的强制直连例外。
