@@ -94,6 +94,8 @@ dns:
     - +.lan
     - +.local
     - +.ts.net
+    - +.tailscale.com   # 控制面：必须用真实 IP，否则 tailscaled 长连接会超时
+    - +.tailscale.io
     - geosite:private
     - geosite:cn
     - "rule-set:fakeipfilter_cn"
