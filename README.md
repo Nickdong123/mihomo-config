@@ -174,10 +174,10 @@ mihomo-substore.yaml
   - 海外版 `Apple` 与 `Microsoft`（OneDrive、Office365、Copilot 等）仍保留独立控制。
 - 规则集全面现代化：淘汰原第三方维护的大型纯文本列表（如 1MB 的 Global 和 Direct），AI、游戏（Epic/EA/暴雪/育碧/索尼/任天堂）、社交通讯及 GFW 全面转向 MetaCubeX 官方预编译的二进制 `mrs` 规则集，大幅降低内存占用与 GC 压力。
 - 策略组测速标准化：所有地区自动测速 (`url-test`) 与故障转移 (`fallback`) 策略组统一声明 `lazy: true`，杜绝后台无脑定时探测风暴，实现按需测速。
-- DNS 性能彻底释放：国内解析（`direct-nameserver` 与 `nameserver-policy: geosite:cn`）及节点域名解析（`proxy-server-nameserver`）全面采用纯 IP 的顶级公共 DNS (`223.5.5.5`, `119.29.29.29`)，杜绝 DoH 握手延迟与自举依赖，同时完全避开本地运营商劫持。
-- 嗅探与 QUIC 调优：关闭 Sniffer 中的 QUIC (UDP 443) 嗅探以释放 CPU；规则层加入 `- AND,((DST-PORT,443),(NETWORK,UDP)),REJECT`，使 YouTube、Google 等出海流量瞬间回退到更稳定高效的 TCP BBR，彻底解决流媒体初次加载转圈与卡顿。
-- DNS 使用 ARC 缓存、IPv4-only、fake-ip；国内域名使用国内 DoH，海外域名使用遵守路由规则的海外 DoH，代理节点使用独立的国内 DNS，私有域名和 Tailscale 使用系统解析。
-- `.lan`、`.local`、`.ts.net` 和 `geosite:private` 保留真实解析，避免局域网设备、NAS 和 Tailscale MagicDNS 被错误分配 fake-ip。
+- DNS 性能彻底释放：国内直连解析（`direct-nameserver` 与 `nameserver-policy: geosite:cn`）及节点域名解析（`proxy-server-nameserver`）全面采用纯 IP 的顶级公共 UDP DNS (`223.5.5.5`, `119.29.29.29`)，毫秒级极速响应（2~4ms），杜绝 DoH 握手延迟与递归自举依赖，同时避开运营商劫持。海外域名使用遵守路由规则的海外 DoH，私有域名和 Tailscale 使用系统解析。
+- 嗅探与 QUIC 调优：关闭 Sniffer 中的 QUIC (UDP 443) 嗅探以释放 CPU；规则层首行加入 `- AND,((DST-PORT,443),(NETWORK,UDP)),REJECT`，使 YouTube、Google 等出海流量瞬间回退到更稳定高效的 TCP BBR，彻底解决流媒体初次加载转圈与卡顿（不影响底层使用高位端口 UDP 的 Hysteria / TUIC 代理节点）。
+- TUN 协议栈原生化：TUN 模块全面采用 MetaCubeX 官方自研原生 `mips`（Mihomo IP Stack）轻量级网络栈，兼顾极低内存与极高吞吐；支持 Full-Cone NAT1，为局域网游戏联机与流媒体提供最佳兼容性。
+- DNS 核心机制：启用 ARC 缓存算法、IPv4-only（节点出站支持 IPv6）、Fake-IP；`.lan`、`.local`、`+.ts.net`、`+.tailscale.com`、`geosite:private` 和 `geosite:cn` 等均配置为 Fake-IP 过滤，保障局域网、NAS、Tailscale 和国内服务的绝对兼容。
 
 规则集中的 MetaCubeX MRS 文件优先通过 jsDelivr 加载；文字规则仍按其实际格式保持 `classical/text`，不能把 text 规则误标为 MRS。
 
@@ -191,6 +191,14 @@ sniffer:
   override-destination: false
   force-dns-mapping: false
   parse-pure-ip: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+    TLS:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+    - "+.push.apple.com"
 ```
 
 这组设置主要用于从纯 IP 连接中补出域名，让已有的域名规则能够正常参与分流。`override-destination: false` 表示只补充分流信息，不把连接实际访问的目标地址改写成嗅探出来的域名，因此适合做公共默认配置。
@@ -509,6 +517,7 @@ HK
 
 ```text
 mihomo-config/
+├── LICENSE
 ├── README.md
 ├── VERSION
 ├── mihomo.yaml
@@ -718,14 +727,4 @@ populate-groups.js
 
 ## License
 
-建议使用 MIT License。
-
-如果希望其他人可以自由：
-
-- 使用
-- 修改
-- Fork
-- 二次开发
-- 分发
-
-MIT License 是比较合适的选择。
+本项目采用 [MIT License](LICENSE) 授权开源。您可以自由使用、修改、分发及用于商业用途，请保留原版权声明与许可协议。
