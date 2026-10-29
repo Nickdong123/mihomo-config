@@ -174,7 +174,8 @@ mihomo-substore.yaml
   - 海外版 `Apple` 与 `Microsoft`（OneDrive、Office365、Copilot 等）仍保留独立控制。
 - 规则集全面现代化：淘汰原第三方维护的大型纯文本列表（如 1MB 的 Global 和 Direct），AI、游戏（Epic/EA/暴雪/育碧/索尼/任天堂）、社交通讯及 GFW 全面转向 MetaCubeX 官方预编译的二进制 `mrs` 规则集，大幅降低内存占用与 GC 压力。
 - 策略组测速标准化：所有地区自动测速 (`url-test`) 与故障转移 (`fallback`) 策略组统一声明 `lazy: true`，杜绝后台无脑定时探测风暴，实现按需测速。
-- DNS 节点解析消除自举：`proxy-server-nameserver` 改用纯 IP 的顶级公共 DNS (`223.5.5.5`, `119.29.29.29`)，彻底消除 DoH 域名递归解析链条。
+- DNS 性能彻底释放：国内解析（`direct-nameserver` 与 `nameserver-policy: geosite:cn`）及节点域名解析（`proxy-server-nameserver`）全面采用纯 IP 的顶级公共 DNS (`223.5.5.5`, `119.29.29.29`)，杜绝 DoH 握手延迟与自举依赖，同时完全避开本地运营商劫持。
+- 嗅探与 QUIC 调优：关闭 Sniffer 中的 QUIC (UDP 443) 嗅探以释放 CPU；规则层加入 `- AND,((DST-PORT,443),(NETWORK,UDP)),REJECT`，使 YouTube、Google 等出海流量瞬间回退到更稳定高效的 TCP BBR，彻底解决流媒体初次加载转圈与卡顿。
 - DNS 使用 ARC 缓存、IPv4-only、fake-ip；国内域名使用国内 DoH，海外域名使用遵守路由规则的海外 DoH，代理节点使用独立的国内 DNS，私有域名和 Tailscale 使用系统解析。
 - `.lan`、`.local`、`.ts.net` 和 `geosite:private` 保留真实解析，避免局域网设备、NAS 和 Tailscale MagicDNS 被错误分配 fake-ip。
 

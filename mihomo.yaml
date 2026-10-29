@@ -76,13 +76,13 @@ dns:
     - 223.5.5.5
     - 119.29.29.29
   direct-nameserver:
-    - https://doh.pub/dns-query
-    - https://dns.alidns.com/dns-query
+    - 223.5.5.5
+    - 119.29.29.29
   direct-nameserver-follow-policy: true
   nameserver-policy:
     "geosite:cn":
-      - https://doh.pub/dns-query
-      - https://dns.alidns.com/dns-query
+      - 223.5.5.5
+      - 119.29.29.29
     "geosite:private": system
     "+.ts.net": system
     "+.lan": system
@@ -133,8 +133,6 @@ sniffer:
     HTTP:
       ports: [80, 8080-8880]
     TLS:
-      ports: [443, 8443]
-    QUIC:
       ports: [443, 8443]
   skip-domain:
     - "Mijia Cloud"
@@ -460,6 +458,7 @@ rules:
   - DOMAIN-SUFFIX,lan,直连
   - DOMAIN-SUFFIX,local,直连
   - RULE-SET,Private / Domain,直连
+  - AND,((DST-PORT,443),(NETWORK,UDP)),REJECT
 
   - RULE-SET,Check / Domain,Check
   - RULE-SET,OpenAI / Domain,AI服务
