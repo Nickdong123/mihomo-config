@@ -107,7 +107,7 @@ dns:
 # ========================
 tun:
   enable: true
-  stack: mixed
+  stack: mips
   auto-route: true
   auto-detect-interface: false
   auto-redirect: false
