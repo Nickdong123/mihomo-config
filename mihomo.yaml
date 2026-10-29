@@ -108,10 +108,14 @@ dns:
 tun:
   enable: true
   stack: mips
+  device: utun
   auto-route: true
   auto-detect-interface: false
   auto-redirect: false
   strict-route: true
+  gso: true
+  gso-max-size: 65536
+  endpoint-independent-nat: true
   dns-hijack:
     - any:53
     - tcp://any:53
