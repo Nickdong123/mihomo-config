@@ -169,7 +169,12 @@ mihomo-substore.yaml
 - 开发服务使用上游维护的 `category-dev` 分类，覆盖 Go、Rust、Python、Docker、JetBrains、GitLab、npm 等开发生态，仍可手动选择直连、代理、自动或故障转移。分类来自 V2Fly 社区及 MetaCubeX 的构建发布，使用完整 `geosite.dat` 并由 Mihomo 每 24 小时自动更新；本仓库不额外维护开发域名补充。前面的 AI、GitHub、Apple、Microsoft 等专用规则优先，分类未收录的域名按后续通用规则分流。此分类覆盖面更广，但不是原五个开发列表的完整超集。
 - `category-ai-!cn` 仅作为 `AI海外兜底`，不建立国内 AI 策略组。
 - DeepSeek、智谱、通义、豆包等国内服务继续通过 `China / Domain` 或 `China / IP` 进入 `国内网站`，默认直连。
-- Apple 和 Microsoft 的中国区域域名仍由各自的 `Apple`、`Microsoft` 策略组控制，不设置用户看不见的强制直连例外。
+- Apple 和 Microsoft 采用细分策略组控制，不设置隐式写死的强制直连：
+  - 设立独立的 `苹果国内`（覆盖 Apple-CN）与 `微软更新`（覆盖 Win-Update）策略组，默认选中 `直连`，防止巨量系统补丁与国内 CDN 流量误走国外 VPS 节点；用户仍可在面板随时切换为代理节点。
+  - 海外版 `Apple` 与 `Microsoft`（OneDrive、Office365、Copilot 等）仍保留独立控制。
+- 规则集全面现代化：淘汰原第三方维护的大型纯文本列表（如 1MB 的 Global 和 Direct），AI、游戏（Epic/EA/暴雪/育碧/索尼/任天堂）、社交通讯及 GFW 全面转向 MetaCubeX 官方预编译的二进制 `mrs` 规则集，大幅降低内存占用与 GC 压力。
+- 策略组测速标准化：所有地区自动测速 (`url-test`) 与故障转移 (`fallback`) 策略组统一声明 `lazy: true`，杜绝后台无脑定时探测风暴，实现按需测速。
+- DNS 节点解析消除自举：`proxy-server-nameserver` 改用纯 IP 的顶级公共 DNS (`223.5.5.5`, `119.29.29.29`)，彻底消除 DoH 域名递归解析链条。
 - DNS 使用 ARC 缓存、IPv4-only、fake-ip；国内域名使用国内 DoH，海外域名使用遵守路由规则的海外 DoH，代理节点使用独立的国内 DNS，私有域名和 Tailscale 使用系统解析。
 - `.lan`、`.local`、`.ts.net` 和 `geosite:private` 保留真实解析，避免局域网设备、NAS 和 Tailscale MagicDNS 被错误分配 fake-ip。
 
