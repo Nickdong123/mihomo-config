@@ -459,6 +459,9 @@ rules:
   - IP-CIDR,192.168.0.0/16,直连,no-resolve
   - DOMAIN-SUFFIX,tailscale.com,直连
   - DOMAIN-SUFFIX,ts.net,直连
+  # Tailscale STUN 穿透探测与 WireGuard 默认对联端口直连（防止海外裸 IP 探测误入代理）
+  - DST-PORT,3478,直连
+  - DST-PORT,41641,直连
   - DOMAIN-SUFFIX,lan,直连
   - DOMAIN-SUFFIX,local,直连
   - RULE-SET,Private / Domain,直连
